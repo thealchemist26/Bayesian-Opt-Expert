@@ -1,10 +1,3 @@
-import os
-import subprocess
-import webbrowser
-import time
-
-# --- THE DEFINITIVE REPAIRED "FORENSIC OPTIMIZER" CODE ---
-app_code = """
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -14,6 +7,7 @@ from scipy.stats import norm
 import plotly.graph_objects as go
 import plotly.express as px
 
+# --- APP CONFIGURATION ---
 st.set_page_config(page_title="Forensic Optimizer Master", layout="wide")
 
 st.title("📊 Forensic Bayesian Optimizer Master Suite")
@@ -146,6 +140,7 @@ if st.session_state.vars_config:
                 
                 pts = np.unique(np.array(pts), axis=0)
                 mu, std = gp.predict(pts, return_std=True)
+                # Acquisition Function: Expected Improvement
                 ei = (mu - np.max(y)) * norm.cdf((mu - np.max(y))/std) + std * norm.pdf((mu - np.max(y))/std)
                 best = pts[np.argmax(ei)]
                 st.session_state.current_suggestion = {n: (st.session_state.vars_config[n]['options'][int(best[i])] if st.session_state.vars_config[n]['type'] == 'Categorical' else best[i]) for i, n in enumerate(feats)}
@@ -204,7 +199,6 @@ if st.session_state.vars_config:
                 st.plotly_chart(fig_p, use_container_width=True)
 
             if ("Surface (2D/3D)" in plots or "Parameter Importance" in plots) and len(st.session_state.experiments) >= 3:
-                # Math Prep for Model plots
                 f_list = [c for c in st.session_state.experiments.columns if c != 'Target']
                 df_m = st.session_state.experiments.copy()
                 for col in f_list:
@@ -253,12 +247,3 @@ if st.session_state.vars_config:
                         tp[:, i] = np.linspace(rmin, rmax, 50)
                         sens.append(np.ptp(gp.predict(tp)))
                     st.plotly_chart(px.bar(x=f_list, y=sens, title="Impact Analysis", labels={'x':'Factor','y':'Relative Impact'}), use_container_width=True)
-"""
-
-# --- LAUNCHER ---
-with open("forensic_repaired_final.py", "w", encoding="utf-8") as f:
-    f.write(app_code)
-
-process = subprocess.Popen(["python", "-m", "streamlit", "run", "forensic_repaired_final.py", "--server.port", "8501", "--server.headless", "true"])
-time.sleep(5)
-webbrowser.open("http://localhost:8501")
