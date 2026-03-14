@@ -8,9 +8,9 @@ import plotly.graph_objects as go
 import plotly.express as px
 
 # --- APP CONFIGURATION ---
-st.set_page_config(page_title="Forensic Optimizer Master", layout="wide")
+st.set_page_config(page_title="Bayesian Optimiser", layout="wide")
 
-st.title("📊 Forensic Bayesian Optimizer Master Suite")
+st.title("Bayesian Opt-Expert")
 st.markdown("---")
 
 # --- 1. INITIALIZE SESSION STATE ---
